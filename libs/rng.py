@@ -23,15 +23,15 @@ def genVar(randomVarSize):
 
 # Generate random data
 def genData(dataLen):
-  paddingChars = ''.join(random.SystemRandom().choice(randomChars) for _ in xrange(dataLen))
-  return paddingChars
+  return ''.join(
+      random.SystemRandom().choice(randomChars) for _ in xrange(dataLen))
 
 # Generate an encryption key
 def genKey(encKeyLen):
-  encKey = ''.join(random.SystemRandom().choice(encChars) for _ in xrange(encKeyLen))
-  return encKey
+  return ''.join(
+      random.SystemRandom().choice(encChars) for _ in xrange(encKeyLen))
 
 # Generate an IV for encryption
 def genIv(encIvLen):
-  encIv = ''.join(random.SystemRandom().choice(encChars) for _ in xrange(encIvLen))
-  return encIv
+  return ''.join(
+      random.SystemRandom().choice(encChars) for _ in xrange(encIvLen))

